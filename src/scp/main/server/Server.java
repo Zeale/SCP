@@ -17,7 +17,8 @@ public class Server {
 	public void receiveMessage(String message, ServerConnection connection, Socket socket) throws Throwable {
 		String msg = users.get(socket).getUsername() + ": " + message;
 		for (Socket s : users.keySet())
-			s.getOutputStream().write(NetworkEncoder.encodeMessage(msg));
+			if (s != socket)
+				s.getOutputStream().write(NetworkEncoder.encodeMessage(msg));
 	}
 
 	public void handleNewConnection(ServerConnection connection, Socket newConnection) throws Throwable {

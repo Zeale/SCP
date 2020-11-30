@@ -18,6 +18,8 @@ public class NetworkEncoder {
 
 	public static String pollMessage(InputStream input) throws IOException {
 		DataInputStream dis = new DataInputStream(input);
-		return new String(dis.readNBytes(dis.readInt()), StandardCharsets.UTF_8);
+		byte[] bites = new byte[dis.readInt()];
+		dis.read(bites);
+		return new String(bites, StandardCharsets.UTF_8);
 	}
 }

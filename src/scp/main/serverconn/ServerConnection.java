@@ -1,7 +1,9 @@
 package scp.main.serverconn;
 
+import java.io.IOException;
 import java.net.Socket;
 
+import scp.main.networkencoder.NetworkEncoder;
 import scp.main.server.Server;
 
 public class ServerConnection {
@@ -14,13 +16,13 @@ public class ServerConnection {
 		// that calls #receiveMessage(...) whenever a message is received from a client.
 	}
 
-	public void sendMessage(String message, Socket socket) {
+	public void sendMessage(String message, Socket socket) throws Throwable {
 		socket.getOutputStream().write(NetworkEncoder.encodeMessage(message));
 		socket.getOutputStream().flush();
 	}
 
-	private void receiveMessage(Socket socket, String message) {
-		server.receiveMessage(NetworkEncoder.pollMessage(), this, socket);
+	private void receiveMessage(Socket socket, String message) throws IOException, Throwable {
+		server.receiveMessage(NetworkEncoder.pollMessage(socket.getInputStream()), this, socket);
 	}
 
 }

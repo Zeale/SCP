@@ -9,9 +9,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import main.alixia.javalibrary.javafx.tools.FXTools;
 import scp.main.clientconn.ClientConnection;
 import scp.main.colorencoder.ColorParser;
 import scp.main.server.Server;
@@ -40,6 +46,23 @@ public class ClientGUI extends Window {
 			throw new RuntimeException(e);
 		}
 		Stage stayj = new Stage();
+		stayj.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+			if (event.getCode() == KeyCode.F11) {
+				stayj.setFullScreen(!stayj.isFullScreen());
+				event.consume();
+			} else if (event.getCode() == KeyCode.PRINTSCREEN) {
+				try {
+					WritableImage img = stayj.getScene().snapshot(
+							new WritableImage((int) stayj.getScene().getWidth(), (int) stayj.getScene().getHeight()));
+					ClipboardContent content = new ClipboardContent();
+					content.putImage(img);
+					Clipboard.getSystemClipboard().setContent(content);
+					FXTools.spawnLabelAtMousePos("Screenshot copied to Clipboard!", Color.GREEN, stayj);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
 
 		StandardConsole consolee = new StandardConsole();
 		consolee.clear();
@@ -90,6 +113,23 @@ public class ClientGUI extends Window {
 
 	@Override
 	protected void show(Stage stage, ApplicationProperties properties) throws WindowLoadFailureException {
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+			if (event.getCode() == KeyCode.F11) {
+				stage.setFullScreen(!stage.isFullScreen());
+				event.consume();
+			} else if (event.getCode() == KeyCode.PRINTSCREEN) {
+				try {
+					WritableImage img = stage.getScene().snapshot(
+							new WritableImage((int) stage.getScene().getWidth(), (int) stage.getScene().getHeight()));
+					ClipboardContent content = new ClipboardContent();
+					content.putImage(img);
+					Clipboard.getSystemClipboard().setContent(content);
+					FXTools.spawnLabelAtMousePos("Screenshot copied to Clipboard!", Color.GREEN, stage);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
 		props = properties;
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("ClientGUI.fxml"));
 		loader.setController(this);

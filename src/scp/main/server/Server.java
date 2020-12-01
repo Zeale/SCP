@@ -21,11 +21,7 @@ public class Server {
 	}
 
 	public void handleNewConnection(ServerConnection connection, Socket newConnection) throws Throwable {
-
-		String name = NetworkEncoder.pollMessage(newConnection.getInputStream()).substring(7);
-
-		User user = new User(newConnection, name);
-		users.put(newConnection, user);
-
+		users.put(newConnection,
+				new User(newConnection, NetworkEncoder.pollMessage(newConnection.getInputStream()).substring(7)));
 	}
 }

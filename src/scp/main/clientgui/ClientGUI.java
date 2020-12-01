@@ -60,6 +60,7 @@ public class ClientGUI extends Window {
 		try {
 			Server server = new Server();
 			ServerConnection conn = new ServerConnection();
+			conn.start(Integer.parseInt(localPort.getText()), server);
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		}

@@ -1,5 +1,12 @@
 package scp.main.colorencoder;
 
+import static javafx.scene.paint.Color.BLUE;
+import static javafx.scene.paint.Color.GREEN;
+import static javafx.scene.paint.Color.ORANGE;
+import static javafx.scene.paint.Color.PURPLE;
+import static javafx.scene.paint.Color.RED;
+import static javafx.scene.paint.Color.YELLOW;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,14 +14,12 @@ import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import zeale.apps.tools.console.std.ConsoleItem;
 import zeale.mouse.utils.CharacterParser;
-import static javafx.scene.paint.Color.*;
 
 public class ColorParser {
 

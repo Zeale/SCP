@@ -3,6 +3,7 @@ package scp.main;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import scp.main.clientgui.ClientGUI;
 
 public class Launch extends Application {
 	public static void main(String[] args) {
@@ -13,7 +14,7 @@ public class Launch extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		Platform.setImplicitExit(true);
 		primaryStage.show();
-		new LogInWindow().display(primaryStage);
+		new ClientGUI().display(primaryStage);
 	}
 
 }

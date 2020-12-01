@@ -12,7 +12,7 @@ public class ClientConnection {
 		messageListeners.add(consumer);
 	}
 
-	public void connect(String endpoint, int port) {
+	public void connect(String endpoint, int port, String username) {
 		// TODO Write the code to connect this "Client Connection" to the server at the
 		// specified endpoint and port.
 

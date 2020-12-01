@@ -1,10 +1,12 @@
 package scp.main.colorencoder;
 
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import zeale.apps.tools.console.std.ConsoleItem;
 
 public class CurrentFormatting implements Cloneable {
 	public boolean isBold() {
@@ -85,15 +87,18 @@ public class CurrentFormatting implements Cloneable {
 		return new CurrentFormatting(bold, italicized, underline, fontsize, fontname, color);
 	}
 
-	public Text generateText(String txt) {
-		Text text = new Text(txt);
-		text.setFont(Font.font(fontname, bold ? FontWeight.BOLD : FontWeight.NORMAL,
-				italicized ? FontPosture.ITALIC : FontPosture.REGULAR, fontsize));
+	public ConsoleItem generateText(String txt) {
+		ConsoleItem text = new ConsoleItem();
 		if (underline)
 			text.setUnderline(true);
-
 		if (color != null)
-			text.setFill(color);
+			text.setColor((Color) color);
+		if (fontname != null)
+			text.setFontFamily(fontname);
+		if (bold)
+			text.setWeight(FontWeight.BOLD);
+		if (italicized)
+			text.setPosture(FontPosture.ITALIC);
 		return text;
 	}
 

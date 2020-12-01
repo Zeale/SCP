@@ -1,4 +1,4 @@
-package scp.main.serverconn;
+package scp.main.server;
 
 import java.net.Socket;
 

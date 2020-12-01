@@ -1,35 +1,43 @@
 package scp.main.clientconn;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import scp.main.networkencoder.NetworkEncoder;
+
 public class ClientConnection {
 
 	private final List<Consumer<String>> messageListeners = new ArrayList<>();
-	
+	private Socket sock;
+
 	public void registerConsumer(Consumer<String> consumer) {
 		messageListeners.add(consumer);
 	}
 
-	public void connect(String endpoint, int port, String username) {
-		// TODO Write the code to connect this "Client Connection" to the server at the
-		// specified endpoint and port.
-
-		// You may need to add some fields to this class (like a Socket) to do this.
+	public void connect(String endpoint, int port, String username) throws Throwable {
+		sock = new Socket(endpoint, port);
+		sock.getOutputStream().write(NetworkEncoder.encodeMessage(username));
+		Thread var0 = new Thread(() -> {
+			while (true) {
+				try {
+					receiveMessage(NetworkEncoder.pollMessage(sock.getInputStream()));
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+		var0.setDaemon(true);
+		var0.start();
 	}
 
-	public void sendMessage(String message) {
-		// TODO Write the code to send a message to the server. This method should only
-		// be called if this object has already been connected to a server, so don't
-		// worry about handling things if it hasn't been.
+	public void sendMessage(String message) throws Throwable {
+		sock.getOutputStream().write(NetworkEncoder.encodeMessage(message));
 	}
 
-	private void receiveMessage(String message) {// TODO Call this method in the code that you write which handles
-													// incoming messages from the server. This method will automatically
-													// notify all message listeners.
-
-		// DON'T change this method.
+	private void receiveMessage(String message) {
 		for (Consumer<String> listener : messageListeners)
 			listener.accept(message);
 	}

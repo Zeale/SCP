@@ -1,6 +1,7 @@
 package scp.main.clientgui;
 
 import java.io.IOException;
+import java.util.List;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -19,6 +20,7 @@ import zeale.apps.stuff.api.appprops.ApplicationProperties;
 import zeale.apps.stuff.api.guis.windows.Window;
 import zeale.apps.tools.console.std.ConsoleItem;
 import zeale.apps.tools.console.std.StandardConsole;
+import zeale.apps.tools.console.std.StandardConsole.EmbeddedStandardConsoleView;
 
 public class ClientGUI extends Window {
 
@@ -41,7 +43,8 @@ public class ClientGUI extends Window {
 
 		StandardConsole consolee = new StandardConsole();
 		consolee.clear();
-		Scene seen = new Scene(new StackPane(consolee.getEmbeddedView()));
+		EmbeddedStandardConsoleView view = consolee.getEmbeddedView();
+		Scene seen = new Scene(new StackPane(view));
 		seen.getStylesheets().setAll(props.popButtonStylesheet.get(), props.themeStylesheet.get());
 		stayj.setScene(seen);
 		stayj.setTitle("Client: [" + serverIP.getText() + ':' + serverPort.getText() + ']');
@@ -49,7 +52,11 @@ public class ClientGUI extends Window {
 		consolee.applyLogic(input -> {
 			String txt = input.text.trim();
 			if (!txt.isEmpty()) {
-				consolee.println('[' + username + "]: " + txt, Color.ORANGE);
+				List<ConsoleItem> formatting = new ColorParser().parseFormatting(txt);
+				consolee.print('[' + username + "]: ", Color.ORANGE);
+				for (ConsoleItem ci : formatting)
+					consolee.write(ci);
+				consolee.println();
 				try {
 					conn.sendMessage(txt);
 				} catch (Throwable e) {
@@ -57,13 +64,11 @@ public class ClientGUI extends Window {
 				}
 			}
 		});
-		conn.registerConsumer(t -> {
-			ColorParser cp = new ColorParser();
-			Platform.runLater(() -> {
-				for (ConsoleItem ci : cp.parseFormatting(t))
-					consolee.write(ci);
-			});
-		});
+		conn.registerConsumer(t -> Platform.runLater(() -> {
+			for (ConsoleItem ci : new ColorParser().parseFormatting(t))
+				consolee.write(ci);
+			consolee.println();
+		}));
 	}
 
 	private @FXML void launchServer() {

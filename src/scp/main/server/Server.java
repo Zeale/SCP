@@ -6,7 +6,6 @@ import java.util.Map;
 
 import scp.main.networkencoder.NetworkEncoder;
 import scp.main.serverconn.ServerConnection;
-import scp.main.serverconn.User;
 
 public class Server {
 	private final Map<Socket, User> users = new HashMap<>();

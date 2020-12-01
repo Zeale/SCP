@@ -1,7 +1,12 @@
 package scp.main.clientgui;
 
+import java.io.IOException;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import zeale.apps.stuff.api.appprops.ApplicationProperties;
@@ -29,14 +34,20 @@ public class ClientGUI extends Window {
 
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	protected void show(Stage stage, ApplicationProperties properties) throws WindowLoadFailureException {
-		// TODO Auto-generated method stub
-
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("ClientGUI.fxml"));
+		loader.setController(this);
+		try {
+			Parent parent = loader.load();
+			Scene value = new Scene(parent);
+			value.getStylesheets().setAll(properties.popButtonStylesheet.get(), properties.themeStylesheet.get());
+			stage.setScene(value);
+		} catch (IOException e) {
+			throw new WindowLoadFailureException(e);
+		}
 	}
 
 	private @FXML void close() {

@@ -17,7 +17,6 @@ import scp.main.server.Server;
 import scp.main.serverconn.ServerConnection;
 import zeale.apps.stuff.api.appprops.ApplicationProperties;
 import zeale.apps.stuff.api.guis.windows.Window;
-import zeale.apps.tools.console.std.ConsoleItem;
 import zeale.apps.tools.console.std.StandardConsole;
 
 public class ClientGUI extends Window {
@@ -32,7 +31,11 @@ public class ClientGUI extends Window {
 	private @FXML void launchClient() {
 		String username = this.username.getText();
 		ClientConnection conn = new ClientConnection();
-		conn.connect(serverIP.getText(), Integer.parseInt(serverIP.getText()), username);
+		try {
+			conn.connect(serverIP.getText(), Integer.parseInt(serverIP.getText()), username);
+		} catch (Throwable e) {
+			throw new RuntimeException(e);
+		}
 		Stage stayj = new Stage();
 
 		StandardConsole consolee = new StandardConsole();
@@ -45,13 +48,18 @@ public class ClientGUI extends Window {
 			String txt = input.text.trim();
 			consolee.println('[' + username + "]: " + txt, Color.ORANGE);
 			if (!txt.isEmpty())
-				conn.sendMessage(txt);
+				try {
+					conn.sendMessage(txt);
+				} catch (Throwable e) {
+					throw new RuntimeException(e);
+				}
 		});
 		conn.registerConsumer(t -> {
 			ColorParser cp = new ColorParser();
 			Platform.runLater(() -> {
-				for (ConsoleItem ci : cp.parseFormatting(t))
-					consolee.write(ci);
+//				for (ConsoleItem ci : cp.parseFormatting(t))
+//					consolee.write(ci);
+				consolee.println(t, Color.GREEN);
 			});
 		});
 	}

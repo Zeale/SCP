@@ -7,6 +7,10 @@ import java.util.function.Consumer;
 public class ClientConnection {
 
 	private final List<Consumer<String>> messageListeners = new ArrayList<>();
+	
+	public void registerConsumer(Consumer<String> consumer) {
+		messageListeners.add(consumer);
+	}
 
 	public void connect(String endpoint, int port) {
 		// TODO Write the code to connect this "Client Connection" to the server at the

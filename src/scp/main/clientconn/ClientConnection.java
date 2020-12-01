@@ -24,6 +24,7 @@ public class ClientConnection {
 			while (true) {
 				try {
 					receiveMessage(NetworkEncoder.pollMessage(sock.getInputStream()));
+					System.out.println("Received msg");
 				} catch (IOException e) {
 					throw new RuntimeException(e);
 				}
@@ -35,6 +36,7 @@ public class ClientConnection {
 
 	public void sendMessage(String message) throws Throwable {
 		sock.getOutputStream().write(NetworkEncoder.encodeMessage(message));
+		sock.getOutputStream().flush();
 	}
 
 	private void receiveMessage(String message) {

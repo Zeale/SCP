@@ -14,6 +14,7 @@ public class ServerConnection {
 	public void start(int port, Server server) throws Throwable {
 		@SuppressWarnings("resource") // 8)
 		ServerSocket serv = new ServerSocket(port);
+		this.server = server;
 		Thread acceptor = new Thread(() -> {
 			while (true)
 				try {
@@ -43,7 +44,7 @@ public class ServerConnection {
 	}
 
 	private void receiveMessage(Socket socket, String message) throws IOException, Throwable {
-		server.receiveMessage(NetworkEncoder.pollMessage(socket.getInputStream()), this, socket);
+		server.receiveMessage(message, this, socket);
 	}
 
 }

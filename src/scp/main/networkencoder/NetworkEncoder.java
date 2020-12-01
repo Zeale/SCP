@@ -19,7 +19,7 @@ public class NetworkEncoder {
 	public static String pollMessage(InputStream input) throws IOException {
 		DataInputStream dis = new DataInputStream(input);
 		byte[] bites = new byte[dis.readInt()];
-		dis.read(bites);
+		input.read(bites);
 		return new String(bites, StandardCharsets.UTF_8);
 	}
 }

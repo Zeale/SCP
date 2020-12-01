@@ -17,6 +17,7 @@ import scp.main.server.Server;
 import scp.main.serverconn.ServerConnection;
 import zeale.apps.stuff.api.appprops.ApplicationProperties;
 import zeale.apps.stuff.api.guis.windows.Window;
+import zeale.apps.tools.console.std.ConsoleItem;
 import zeale.apps.tools.console.std.StandardConsole;
 
 public class ClientGUI extends Window {
@@ -32,34 +33,35 @@ public class ClientGUI extends Window {
 		String username = this.username.getText();
 		ClientConnection conn = new ClientConnection();
 		try {
-			conn.connect(serverIP.getText(), Integer.parseInt(serverIP.getText()), username);
+			conn.connect(serverIP.getText(), Integer.parseInt(serverPort.getText()), username);
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		}
 		Stage stayj = new Stage();
 
 		StandardConsole consolee = new StandardConsole();
-		Scene seen = new Scene(new StackPane());
+		consolee.clear();
+		Scene seen = new Scene(new StackPane(consolee.getEmbeddedView()));
 		seen.getStylesheets().setAll(props.popButtonStylesheet.get(), props.themeStylesheet.get());
 		stayj.setScene(seen);
 		stayj.setTitle("Client: [" + serverIP.getText() + ':' + serverPort.getText() + ']');
 		stayj.show();
 		consolee.applyLogic(input -> {
 			String txt = input.text.trim();
-			consolee.println('[' + username + "]: " + txt, Color.ORANGE);
-			if (!txt.isEmpty())
+			if (!txt.isEmpty()) {
+				consolee.println('[' + username + "]: " + txt, Color.ORANGE);
 				try {
 					conn.sendMessage(txt);
 				} catch (Throwable e) {
 					throw new RuntimeException(e);
 				}
+			}
 		});
 		conn.registerConsumer(t -> {
 			ColorParser cp = new ColorParser();
 			Platform.runLater(() -> {
-//				for (ConsoleItem ci : cp.parseFormatting(t))
-//					consolee.write(ci);
-				consolee.println(t, Color.GREEN);
+				for (ConsoleItem ci : cp.parseFormatting(t))
+					consolee.write(ci);
 			});
 		});
 	}

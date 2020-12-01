@@ -11,6 +11,7 @@ public class Server {
 	private final Map<Socket, User> users = new HashMap<>();
 
 	public Server() throws Throwable {
+		System.out.println("Launching Server");
 	}
 
 	public void receiveMessage(String message, ServerConnection connection, Socket socket) throws Throwable {
@@ -21,6 +22,7 @@ public class Server {
 	}
 
 	public void handleNewConnection(ServerConnection connection, Socket newConnection) throws Throwable {
-		users.put(newConnection, new User(newConnection, NetworkEncoder.pollMessage(newConnection.getInputStream())));
+		String un = NetworkEncoder.pollMessage(newConnection.getInputStream());
+		users.put(newConnection, new User(newConnection, un));
 	}
 }
